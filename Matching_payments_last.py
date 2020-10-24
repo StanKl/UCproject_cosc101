@@ -1,14 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Oct 18 16:13:18 2019
-
-@author: skvsk
-"""
-
 """Open, read, match transactions and print the results from two different files.
-  Written for COSC480-19S2.
+  Written for COSC480-20S1.
   Author: Stanislav Klevtsov.
-  Date: 14 October 2019."""
+  Date: 28 May 2020."""
 
 import csv
 import matplotlib.pyplot as plt
@@ -36,12 +29,14 @@ def main():
     """main function that defines parameters names, creates several lists,
     matches transactions, locates these in approriate lists and prints the results"""
     
-    internal_filename = "internal.csv"
+    internal_filename = "internal.csv" #data from the system
     internal_key = 'Bank Payment ID'
     internal_amount = 'Amount'
    
-    external_filename = "external.csv"
+    external_filename = "external.csv" #data from the bank
     external_key = 'Account servicer reference'
+	
+	#get payments IDs
   
     internal_transactions = get_transactions(internal_filename, internal_key)
     external_transactions = get_transactions(external_filename, external_key)
@@ -51,22 +46,27 @@ def main():
     size_internal = len(internal_transactions) 
     size_external = len(external_transactions)
     standard_size = len('201910071196318274-158963569')
+	
+	#create list for different matching types (these types are
+	#described in the document how to use the program. 
     
-    no_id = [] #transactions without bank ID
+    no_id = []
     no_id_amount = 0
-    diff_standard = [] #transactions with different standard ID
+    diff_standard = []
     diff_standard_amount = 0
-    LHV_online = [] #banklink transactions
+    LHV_online = []
     LHV_online_amount = 0
-    duplicated = [] #transcactions, which bank ID is duplicated in the system
+    duplicated = []
     duplicated_amount = 0 
-    not_matched = [] #non matched transactions
+    not_matched = []
     not_matched_amount = 0
     matched = []
     matched_amount = 0
     
     #Main comparison loop
     #while not at end of internal list and not at end of external
+	#guarantees that the program finishes matching at the moment
+	#when all keys in all lines (transactions) in the internal file have been checked.
     while index_internal < size_internal and index_external < size_external:
         
         previous = internal_transactions[index_internal-1]
@@ -134,10 +134,15 @@ def main():
     print(60 * Line)
     print('Completely matched transactions: {}, {} euros'.format(len(matched), matched_amount))            
     print('Transactions without ID: {}, {} euros'.format(len(no_id), no_id_amount))
+    #print(no_id, '\n\n')
     print('Transactions with another standard of ID: {}, {} euros'.format(len(diff_standard), diff_standard_amount)) 
+    #print('diff\n', diff_standard, '\n')
     print('Banklink transactions: {}, {} euros'.format(len(LHV_online), LHV_online_amount)) 
+    #print('LHV online\n', LHV_online, '\n')
     print('Duplicated transactions: {}, {} euros'.format(len(duplicated), duplicated_amount))
+    #print('dup\n', duplicated, '\n')
     print('Not matched transactions: {}, {} euros'.format(len(not_matched), not_matched_amount)) 
+    #print('not matched\n', not_matched, '\n')
     print(60 * Line)
     
     y_data = [len(no_id), len(diff_standard), len(LHV_online), len(duplicated), len(not_matched)]
